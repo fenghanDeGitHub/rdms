@@ -90,3 +90,12 @@
   .el-submenu__icon-arrow {
   display: none;
 }
+
+.el-descriptions {
+  .el-descriptions-item__cell {
+    padding-bottom: 20px !important;
+    .el-descriptions-item__label {
+      font-weight: bold;
+    }
+  }
+}
