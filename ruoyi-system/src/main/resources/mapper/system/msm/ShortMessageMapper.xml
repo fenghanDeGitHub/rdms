@@ -101,4 +101,17 @@
         success
         )
     </insert>
+    <insert id="addItem">
+        insert into msm_info (
+        send_info_id,
+        user_name,
+        success,
+        phone
+        )VALUES(
+        sendInfoId,
+        userName,
+        success,
+        phone
+        )
+    </insert>
 </mapper>

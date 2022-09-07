@@ -19,7 +19,6 @@ public class ShortMessageImpl implements IShortMessageService {
     @Autowired
     private ShortMessageMapper shortMessageMapper;
 
-    private HttpPostClient httpPostClient;
 
     /**
      * 查询短信列表
@@ -54,6 +53,7 @@ public class ShortMessageImpl implements IShortMessageService {
      */
     @Override
     public JSONObject getJsonObject() {
+        HttpPostClient httpPostClient = new HttpPostClient();
         //调取值班管理系统短信接口
         JSONObject jsonObject = httpPostClient.doPost();
         return jsonObject;

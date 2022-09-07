@@ -31,8 +31,13 @@ public interface ShortMessageMapper {
     public List<MsmInfoEntity> getInfoById(int sendInfoId);
 
     /**
-     * 新增短信
+     * 新增短信主信息
      * @param msmEntity
      */
     public void add(MsmEntity msmEntity);
+    /**
+     * 新增短信子信息
+     * @param msmInfoEntity
+     */
+    public void addItem(MsmInfoEntity msmInfoEntity);
 }

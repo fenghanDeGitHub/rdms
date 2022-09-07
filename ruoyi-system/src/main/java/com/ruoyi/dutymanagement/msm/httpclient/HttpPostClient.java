@@ -3,10 +3,14 @@ package com.ruoyi.dutymanagement.msm.httpclient;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.ruoyi.dutymanagement.msm.domain.MsmEntity;
+import com.ruoyi.dutymanagement.msm.domain.MsmInfoEntity;
 import com.ruoyi.dutymanagement.msm.mapper.ShortMessageMapper;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.entity.BufferedHttpEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
@@ -18,6 +22,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -33,11 +38,12 @@ public class HttpPostClient {
      *
      * @return
      */
+
     public  JSONObject doPost(){
         // 1. 创建HttpClient对象
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
         // 2. 创建HttpPost对象
-        HttpPost post = new HttpPost("localhost:8080/msm/message/list");
+        HttpPost post = new HttpPost("http://192.168.1.9/dev-api/msm/message/list");
         //入库对象
         MsmEntity msmEntity = new MsmEntity();
         // 4. 执行请求并处理响应
@@ -45,6 +51,7 @@ public class HttpPostClient {
             CloseableHttpResponse response = httpClient.execute(post);
             HttpEntity entity = response.getEntity();
             if (entity != null) {
+                entity = new BufferedHttpEntity(entity);
                 System.out.println("响应内容：");
                 System.out.println(EntityUtils.toString(entity));
                 // 从响应模型中获取响应实体
@@ -77,9 +84,13 @@ public class HttpPostClient {
                         msmEntity.setFailCount(failCount);
                         msmEntity.setSignaTure(signature);
                         msmEntity.setSuccess(success);
-                        //短信信息入库
+                        //短信主信息入库
                         shortMessageMapper.add(msmEntity);
-                        object.get("receiverList");
+                        List<MsmInfoEntity> receiverList = (List<MsmInfoEntity>) object.get("receiverList");
+                        for(MsmInfoEntity msmInfoEntity : receiverList){
+                            //短信子信息入库
+                            shortMessageMapper.addItem(msmInfoEntity);
+                        }
                     }
                     return jsonObject;
                 }
