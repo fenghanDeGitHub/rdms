@@ -1,6 +1,21 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+      <el-form-item label="邮箱类型" prop="mailType">
+        <el-select
+          v-model="queryParams.mailType"
+          placeholder="请选择"
+          clearable
+          style="width: 240px"
+        >
+          <el-option
+            v-for="item in mailTypeData"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="标题" prop="mailName">
         <el-input
           v-model="queryParams.mailName"
@@ -14,15 +29,6 @@
         <el-input
           v-model="queryParams.address"
           placeholder="请输入发送地址"
-          clearable
-          style="width: 240px;"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="类型" prop="mailType">
-        <el-input
-          v-model="queryParams.mailType"
-          placeholder="请输入邮箱类型"
           clearable
           style="width: 240px;"
           @keyup.enter.native="handleQuery"
@@ -57,10 +63,10 @@
     <el-table ref="tables" v-loading="loading" :data="list" @selection-change="handleSelectionChange" :default-sort="defaultSort" @sort-change="handleSortChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="邮件编号" align="center" prop="messageId" />
-      <el-table-column label="邮件标题" align="center" prop="mailName" />
-      <el-table-column label="发送地址" align="center" prop="address" :show-overflow-tooltip="true" />
       <el-table-column label="邮箱类型" align="center" prop="mailType" />
+      <el-table-column label="标题" align="center" prop="mailName" />
       <el-table-column label="附件数量" align="center" prop="fileSize" />
+      <el-table-column label="发送地址" align="center" prop="address" :show-overflow-tooltip="true" />
       <el-table-column label="接收时间" align="center" prop="receivedDate" sortable="custom" :sort-orders="['descending', 'ascending']" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.receivedDate) }}</span>
@@ -110,10 +116,10 @@
 </template>
 
 <script>
-import { list, getMsmInfoById } from "@/api/duty/opermsm";
+import { list, getMsmInfoById } from "@/api/duty/operemail";
 
 export default {
-  name: "opermsm",
+  name: "operemail",
   data() {
     return {
       // 遮罩层
@@ -144,7 +150,14 @@ export default {
         address: undefined,
         mailType: undefined,
         fileSize: undefined
-      }
+      },
+      mailTypeData: [{
+        value: '163',
+        label: '163邮箱'
+      },{
+        value: 'pearlwater',
+        label: '珠江委邮箱'
+      }]
     };
   },
   created() {

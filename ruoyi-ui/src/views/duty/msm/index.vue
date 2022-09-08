@@ -27,10 +27,10 @@
           style="width: 240px"
         >
           <el-option
-            v-for="item in msmSuccess"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id"
+            v-for="item in msmSuccessData"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
           />
         </el-select>
       </el-form-item>
@@ -53,19 +53,21 @@
 
     <el-table ref="tables" v-loading="loading" :data="list" @selection-change="handleSelectionChange" :default-sort="defaultSort" @sort-change="handleSortChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="短信编号" align="center" prop="sendInfoId" />
-      <el-table-column label="短信署名" align="center" prop="signature" />
+      <el-table-column label="序号" align="center">
+        <template slot-scope="scope">
+          {{ scope.$index + 1 }}
+        </template>
+      </el-table-column>
+      <el-table-column label="署名" align="center" prop="signature" />
       <el-table-column label="发送内容" align="center" prop="content" :show-overflow-tooltip="true" />
       <el-table-column label="发送人数" align="center" prop="sendCount" />
       <el-table-column label="失败人数" align="center" prop="failCount" />
       <el-table-column label="发送是否成功" align="center" prop="success">
         <template slot-scope="scope">
-          <div>
-            {{ scope.row.success == "0" ? "失败" : "成功" }}
-          </div>
+          <el-tag size="small">{{ scope.row.success == "0" ? "失败" : "成功" }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="发送时间" align="center" prop="sendTime" sortable="custom" :sort-orders="['descending', 'ascending']" width="180">
+      <el-table-column label="发送时间" align="center" prop="sendTime" sortable :sort-orders="['descending', 'ascending']" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.sendTime) }}</span>
         </template>
@@ -98,8 +100,7 @@
             <el-form-item label="发送内容：" v-if="form.content">{{ form.content }}</el-form-item>
           </el-col>
           <el-col :span="24" class="card-box">
-            <!-- <el-card v-if="form.receiverList"> -->
-            <el-form-item label="接收人列表：" v-if="form.operParam">
+            <el-form-item label="接收人列表：" v-if="form.receiverList">
               <el-card>
                 <div class="el-table el-table--enable-row-hover el-table--medium">
                   <table cellspacing="0" style="width: 100%;">
@@ -111,16 +112,10 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                      <!-- <tr v-for="(receiver, index) in form.receiverList" :key="index"> -->
-                        <td class="el-table__cell is-leaf"><div class="cell">陈基海</div></td>
-                        <td class="el-table__cell is-leaf"><div class="cell">成功</div></td>
-                        <td class="el-table__cell is-leaf"><div class="cell">18826417127</div></td>
-                      </tr>
-                      <tr>
-                        <td class="el-table__cell is-leaf"><div class="cell">陈名</div></td>
-                        <td class="el-table__cell is-leaf"><div class="cell">成功</div></td>
-                        <td class="el-table__cell is-leaf"><div class="cell">18826417127</div></td>
+                      <tr v-for="(item, index) in form.receiverList" :key="index">
+                        <td class="el-table__cell is-leaf"><div class="cell">{{ item.userName }}</div></td>
+                        <td class="el-table__cell is-leaf"><div class="cell"><el-tag size="small">{{ item.success == "0" ? "失败" : "成功" }}</el-tag></div></td>
+                        <td class="el-table__cell is-leaf"><div class="cell">{{ item.phone }}</div></td>
                       </tr>
                     </tbody>
                   </table>
@@ -172,12 +167,12 @@ export default {
         content: undefined,
         success: undefined
       },
-      msmSuccess: [{
-        id: 0,
-        name: '失败'
+      msmSuccessData: [{
+        value: 0,
+        label: '失败'
       },{
-        id: 1,
-        name: '成功'
+        value: 1,
+        label: '成功'
       }]
     };
   },
