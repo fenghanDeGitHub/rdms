@@ -46,6 +46,9 @@
         <if test="content!=null and content!=''">
             AND content like concat ('%',#{content},'%')
         </if>
+        <if test="success!=null and success!=''">
+            AND success = #{success}
+        </if>
 <!--        <if test="beginTime != null and beginTime != ''">&lt;!&ndash; 开始时间检索 &ndash;&gt;-->
 <!--            and date_format(send_time,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')-->
 <!--        </if>-->
@@ -77,7 +80,7 @@
         where 1=1
            and send_info_id = #{sendInfoId}
     </select>
-    <insert id="add">
+    <insert id="add" useGeneratedKeys="true" keyProperty="sendInfoId" parameterType="MsmEntity">
         insert into msm (
         send_info_id,
         ageing,
@@ -90,15 +93,16 @@
         signa_ture,
         success
         )VALUES(
-        sendInfoId,
-        ageing,
-        sendTime,
-        businessType,
-        status,
-        sendCount,
-        failCount,
-        signaTure,
-        success
+        #{sendInfoId},
+        #{ageing},
+        #{sendTime},
+        #{businessType},
+        #{status},
+        #{content},
+        #{sendCount},
+        #{failCount},
+        #{signaTure},
+        #{success}
         )
     </insert>
     <insert id="addItem">
@@ -108,10 +112,28 @@
         success,
         phone
         )VALUES(
-        sendInfoId,
-        userName,
-        success,
-        phone
+        #{sendInfoId},
+        #{userName},
+        #{success},
+        #{phone}
         )
     </insert>
+    <select id="testList" parameterType="String" resultType="MsmEntity">
+        select
+        send_info_id as sendInfoId,
+        ageing as ageing,
+        send_time as sendTime,
+        business_type as businessType,
+        status as status,
+        content as content,
+        send_count as sendCount,
+        fail_count as failCount,
+        signa_ture as signaTure,
+        success as success
+        from msm
+        where 1=1
+        <if test="success!=null and success!=''">
+            AND success = #{success}
+        </if>
+    </select>
 </mapper>

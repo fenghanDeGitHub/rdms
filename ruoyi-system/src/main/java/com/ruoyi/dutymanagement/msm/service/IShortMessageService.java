@@ -1,9 +1,11 @@
 package com.ruoyi.dutymanagement.msm.service;
 
 import com.alibaba.fastjson2.JSONObject;
+import com.ruoyi.dutymanagement.msm.domain.MsmEntity;
 import com.ruoyi.dutymanagement.msm.domain.param.MsmParam;
 import com.ruoyi.dutymanagement.msm.domain.vo.MsmVO;
 
+import java.text.ParseException;
 import java.util.List;
 
 public interface IShortMessageService {
@@ -24,5 +26,9 @@ public interface IShortMessageService {
      * 与机器人接口
      * @return
      */
-    public JSONObject getJsonObject();
+    public JSONObject getJsonObject(String success);
+
+    public List<MsmVO> testList(String success);
+
+    public void add(MsmParam msmParam) throws ParseException;
 }

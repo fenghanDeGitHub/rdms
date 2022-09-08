@@ -15,10 +15,19 @@ public class MsmParam {
 
     private String success;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date sendTime;
+    private String ageing;
+
+    private String sendTime;
 
     private String userName;
+
+    private String businessType;
+
+    private int sendCount;
+
+    private int failCount;
+
+    private String status;
 
     private String phone;
 
@@ -26,21 +35,15 @@ public class MsmParam {
 
     private String createBy;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date createTime;
+    private String createTime;
 
     private String updateBy;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date updateTime;
+    private String updateTime;
 
     private int sendInfoId;
 
-    private String status;
+    private String beginTime;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date beginTime;
-
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date endTime;
+    private String endTime;
 }

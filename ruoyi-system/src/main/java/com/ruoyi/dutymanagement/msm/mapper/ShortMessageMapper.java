@@ -9,6 +9,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import javax.annotation.Resource;
 import java.util.List;
 @Resource
+@MapperScan
 public interface ShortMessageMapper {
     /**
      * 查询短信列表
@@ -40,4 +41,6 @@ public interface ShortMessageMapper {
      * @param msmInfoEntity
      */
     public void addItem(MsmInfoEntity msmInfoEntity);
+
+    public List<MsmVO> testList(String success);
 }
