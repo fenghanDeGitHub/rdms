@@ -1,16 +1,14 @@
 package com.ruoyi.dutymanagement.msm.domain.vo;
 
-import com.ruoyi.dutymanagement.msm.domain.MsmEntity;
 import com.ruoyi.dutymanagement.msm.domain.MsmInfoEntity;
 import lombok.Data;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
+
 import java.sql.Timestamp;
 import java.util.List;
 
 @Data
-public class MsmVO extends MsmEntity {
+public class MsmVO {
     private int id;
 
     private int sendInfoId;

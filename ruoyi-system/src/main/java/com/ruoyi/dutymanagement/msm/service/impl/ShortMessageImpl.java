@@ -1,12 +1,14 @@
 package com.ruoyi.dutymanagement.msm.service.impl;
 
+import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.ruoyi.dutymanagement.msm.domain.MsmEntity;
 import com.ruoyi.dutymanagement.msm.domain.MsmInfoEntity;
+import com.ruoyi.dutymanagement.msm.domain.param.LoginInfo;
 import com.ruoyi.dutymanagement.msm.domain.param.MsmParam;
 import com.ruoyi.dutymanagement.msm.domain.vo.MsmVO;
 import com.ruoyi.dutymanagement.msm.mapper.ShortMessageMapper;
-import com.ruoyi.dutymanagement.msm.service.IHttpPostClientService;
+import com.ruoyi.dutymanagement.msm.service.IHttpClientService;
 import com.ruoyi.dutymanagement.msm.service.IShortMessageService;
 import com.ruoyi.dutymanagement.msm.util.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,8 @@ import org.springframework.stereotype.Service;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+
 @Service
 public class ShortMessageImpl implements IShortMessageService {
 
@@ -22,7 +26,7 @@ public class ShortMessageImpl implements IShortMessageService {
     private ShortMessageMapper shortMessageMapper;
 
     @Autowired
-    private IHttpPostClientService httpPostClientService;
+    private IHttpClientService httpPostClientService;
 
     /**
      * 查询短信列表
@@ -55,16 +59,31 @@ public class ShortMessageImpl implements IShortMessageService {
      * @return
      */
     @Override
-    public JSONObject getJsonObject(String success) {
+    public JSONObject getJsonObject(String status) {
         //调取值班管理系统短信接口
-        JSONObject jsonObject = httpPostClientService.doPost(success);
+        JSONObject jsonObject = httpPostClientService.doMsm(status);
         return jsonObject;
     }
-
+    /**
+     * 测试机器人接口
+     * @param status
+     * @return
+     */
     @Override
-    public List<MsmVO> testList(String success) {
-        List<MsmVO> msmVOList = shortMessageMapper.testList(success);
-        return msmVOList;
+    public String getRobotData(String status) {
+        List<MsmVO> msmVOList = shortMessageMapper.getRobotData(status);
+        String messageContent = null;
+        for (MsmVO msmVO:msmVOList) {
+            //发送时间
+            String sendTime = DateUtils.dateRurnString(msmVO.getSendTime());
+            //署名
+            String signaTure = msmVO.getSignaTure();
+            if(null != sendTime  && null != signaTure){
+
+                messageContent =sendTime +signaTure+"来了一条新短消息,请注意查收！";
+            }
+        }
+        return messageContent;
     }
 
     @Override
@@ -72,7 +91,7 @@ public class ShortMessageImpl implements IShortMessageService {
         MsmEntity msmEntity = new MsmEntity();
 //        msmEntity.setSendInfoId(msmParam.getSendInfoId());
         msmEntity.setAgeing(msmParam.getAgeing());
-        Date sendTime =DateUtils.StringTurnDate(msmParam.getSendTime());
+        Date sendTime =DateUtils.stringTurnDate(msmParam.getSendTime());
         msmEntity.setSendTime(sendTime);
         msmEntity.setBusinessType(msmParam.getBusinessType());
         msmEntity.setStatus(msmParam.getStatus());
@@ -82,5 +101,15 @@ public class ShortMessageImpl implements IShortMessageService {
         msmEntity.setSignaTure(msmParam.getSignaTure());
         msmEntity.setSuccess(msmParam.getSuccess());
         shortMessageMapper.add(msmEntity);
+    }
+    /**
+     * 获取token
+     * @param loginInfo
+     * @return
+     */
+    @Override
+    public String getToken(LoginInfo loginInfo) {
+       String token = httpPostClientService.getToken(loginInfo);
+        return token;
     }
 }

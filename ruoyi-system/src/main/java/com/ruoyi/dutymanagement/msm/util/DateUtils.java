@@ -6,9 +6,26 @@ import java.util.Date;
 
 public class DateUtils {
 
-    public static Date StringTurnDate(String str) throws ParseException {
+    /**
+     * String类型转date
+     * @param str
+     * @return
+     * @throws ParseException
+     */
+    public static Date stringTurnDate(String str) throws ParseException {
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date parse = sdf.parse(str);
         return parse;
+    }
+
+    /**
+     * date类型转String
+     * @param date
+     * @return
+     */
+    public static String dateRurnString(Date date){
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String dateString = sdf.format(date);
+        return dateString;
     }
 }

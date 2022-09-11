@@ -5,8 +5,7 @@
 <mapper namespace="com.ruoyi.dutymanagement.msm.mapper.ShortMessageMapper">
 
     <resultMap type="MsmEntity" id="MsmEntityResult">
-        <id     property="id"      column="id" />
-        <result property="sendInfoId"     column="send_info_id"      />
+        <id property="sendInfoId"     column="send_info_id"      />
         <result property="searchValue"    column="search_value"    />
         <result property="createBy"       column="create_by"     />
         <result property="createTime"     column="create_time"   />
@@ -118,9 +117,11 @@
         #{phone}
         )
     </insert>
-    <select id="testList" parameterType="String" resultType="MsmEntity">
+    <select id="getRobotData" parameterType="String" resultType="MsmVO">
         select
         send_info_id as sendInfoId,
+        user_name as userName,
+        phone as phone,
         ageing as ageing,
         send_time as sendTime,
         business_type as businessType,
@@ -132,8 +133,7 @@
         success as success
         from msm
         where 1=1
-        <if test="success!=null and success!=''">
-            AND success = #{success}
-        </if>
+            AND success = '0'
+            AND status = #{status}
     </select>
 </mapper>

@@ -4,9 +4,9 @@ import com.alibaba.fastjson2.JSONObject;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.dutymanagement.msm.domain.param.LoginInfo;
 import com.ruoyi.dutymanagement.msm.domain.param.MsmParam;
 import com.ruoyi.dutymanagement.msm.domain.vo.MsmVO;
-import com.ruoyi.dutymanagement.msm.service.IHttpPostClientService;
 import com.ruoyi.dutymanagement.msm.service.IShortMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +23,6 @@ public class ShortMessageController extends BaseController {
 
     @Autowired
     private IShortMessageService shortMessageService;
-
 
 
     /**
@@ -45,7 +44,7 @@ public class ShortMessageController extends BaseController {
      */
     @GetMapping("/getInfoById")
     public AjaxResult getInfoById(@RequestParam String sendInfoId){
-        if(sendInfoId==null||sendInfoId==""){
+        if(sendInfoId==null|| "".equals(sendInfoId)){
             return AjaxResult.error("sendInfoId不能为空！");
         }
         MsmVO msmVOList = shortMessageService.getInfoById(sendInfoId);
@@ -57,22 +56,29 @@ public class ShortMessageController extends BaseController {
      * @return
      */
     @GetMapping("/getJsonObject")
-    public  AjaxResult getJsonObject(@RequestParam String success){
-        JSONObject jsonObject = shortMessageService.getJsonObject(success);
+    public  AjaxResult getJsonObject(@RequestParam String status){
+        if(status == null || "".equals(status)){
+            return AjaxResult.error("success参数不能为空！");
+        }
+        JSONObject jsonObject = shortMessageService.getJsonObject(status);
         return AjaxResult.success(jsonObject);
     }
     /**
-     * 测试
-     * @param success
+     * 与机器人接口
      * @return
      */
-    @GetMapping("/testList")
-    public TableDataInfo testList(@RequestParam String success){
-        startPage();
-        List<MsmVO> msmVOList = shortMessageService.testList(success);
-        return getDataTable(msmVOList);
-    }
+    @GetMapping("/getRobotData")
+    public  AjaxResult getRobotData(@RequestParam String status){
+        if(status == null || "".equals(status)){
+            return AjaxResult.error("status参数不能为空！");
+        }
+        String messageContent = shortMessageService.getRobotData(status);
+        if(null == messageContent){
+            AjaxResult.error("没有新消息！");
+        }
 
+        return AjaxResult.success(messageContent);
+    }
     /**
      * 测试新增
      * @param param
@@ -82,5 +88,15 @@ public class ShortMessageController extends BaseController {
     public AjaxResult add(@RequestBody MsmParam param) throws ParseException {
         shortMessageService.add(param);
         return AjaxResult.success("新增成功");
+    }
+    /**
+     * 获取token
+     * @param
+     * @return
+     */
+    @PostMapping("/getToken")
+    public AjaxResult getToken(@RequestBody LoginInfo loginInfo){
+        String token = shortMessageService.getToken(loginInfo);
+        return AjaxResult.success(token);
     }
 }

@@ -4,12 +4,10 @@ import com.ruoyi.dutymanagement.msm.domain.MsmEntity;
 import com.ruoyi.dutymanagement.msm.domain.MsmInfoEntity;
 import com.ruoyi.dutymanagement.msm.domain.param.MsmParam;
 import com.ruoyi.dutymanagement.msm.domain.vo.MsmVO;
-import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.stereotype.Repository;
 
-import javax.annotation.Resource;
 import java.util.List;
-@Resource
-@MapperScan
+@Repository
 public interface ShortMessageMapper {
     /**
      * 查询短信列表
@@ -42,5 +40,10 @@ public interface ShortMessageMapper {
      */
     public void addItem(MsmInfoEntity msmInfoEntity);
 
-    public List<MsmVO> testList(String success);
+    /**
+     * 测试机器人接口
+     * @param status
+     * @return
+     */
+    public List<MsmVO> getRobotData(String status);
 }
